@@ -12,7 +12,7 @@ app.use(cors());
 const userRoutes = require("./routes/user.route");
 const leaderboardRoutes = require("./routes/leaderboard.route");
 
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
 app.use("/leaderboard", leaderboardRoutes);
 
 

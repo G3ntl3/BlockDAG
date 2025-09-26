@@ -1,28 +1,45 @@
 const User = require("../models/user_model");
 
 // Register or update user
+// POST /user/register
 const registerUser = async (req, res) => {
   try {
-    const { wallet, username } = req.body;
+    const { wallet, username, avatar } = req.body;
 
-    if (!wallet || !username) {
-      return res.status(400).json({ error: "Wallet and username required" });
+    if (!wallet) {
+      return res.status(400).json({ message: "Wallet is required" });
     }
 
     let user = await User.findOne({ wallet });
 
     if (user) {
-      user.username = username;
+      // Update existing
+      user.username = username || user.username;
+      user.avatar = avatar || user.avatar;
       await user.save();
-    } else {
-      user = await User.create({ wallet, username });
+      return res.status(200).json({ message: "User updated", user });
     }
 
-    res.json(user);
+    // Create new
+    user = new User({
+      wallet,
+      username,
+      avatar,
+      totalBets: 0,
+      wins: 0,
+      losses: 0,
+      netProfit: 0,
+      history: [],
+    });
+
+    await user.save();
+    return res.status(201).json({ message: "User created", user });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Record a win
 const recordWin = async (req, res) => {
