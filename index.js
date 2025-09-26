@@ -9,10 +9,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const registerRoutes = require("./routes/register.route");
+const userRoutes = require("./routes/user.route");
 const leaderboardRoutes = require("./routes/leaderboard.route");
 
-app.use("/users", registerRoutes);
+app.use("/users", userRoutes);
 app.use("/leaderboard", leaderboardRoutes);
 
 
